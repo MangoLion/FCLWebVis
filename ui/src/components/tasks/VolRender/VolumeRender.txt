@@ -1,0 +1,157 @@
+import React, { useState, useEffect, Fragment, useRef, useCallback, useMemo } from 'react'
+import FileForm from './form/FileInput'
+import {
+  ObjFile,
+  Streamlines,
+  VolumeRendering,
+} from './models'
+
+import { getLineCoordsFromText } from './helpers'
+import FILE_TYPES from './form/helpers/fileTypes'
+//import cylinder3D from 'assets/vtk/cylinder3D.json'
+// import bernard3D from 'assets/vtk/bernard3D.json'
+// import tornado3D from 'assets/vtk/tornado3D.json'
+
+import * as THREE from 'three'
+
+import { Form } from 'react-bootstrap'
+import Volume from './models/volume/Volume copy'
+
+import cmViridis from 'assets/textures/cm_viridis.png'
+import cmGray from 'assets/textures/cm_gray.png'
+const textures = {
+  viridis: new THREE.TextureLoader().load(cmViridis),
+  gray: new THREE.TextureLoader().load(cmGray),
+}
+
+
+const VolumeRenderView = () => {
+  const climMinRef = useRef()
+  const climMaxRef = useRef()
+  const styleRef = useRef()
+  const thresholdRef = useRef()
+  const textureRef = useRef()
+  const [state, setState] = useState({
+    type: FILE_TYPES.VTK_VOLUME,
+    data: null,
+    parsing: false,
+    result: cylinder3D,
+  })
+  const [options, setOptions] = useState({
+    uniforms: {
+      u_clim: [0, 1],
+      u_renderstyle: 0,
+      u_renderthreshold: 0.15,
+      u_cmdata: textures.viridis,
+    }
+  })
+
+  useEffect(() => {
+    const {
+      type,
+      data,
+      parsing,
+    } = state
+
+    if(parsing) {
+      const parser = (() => {
+        switch(type) {
+        case FILE_TYPES.LINES_OF_SPACE_SEPERATED_COORDS:
+          return getLineCoordsFromText
+        case FILE_TYPES.OBJ:
+          return (data) => new Promise((resolve) => resolve(data))
+        case FILE_TYPES.VTK_VOLUME:
+          return (data) => new Promise((resolve) => resolve(data))
+        default:
+          return () => Promise.reject(new Error('INVALID FILE TYPE'))
+        }
+      })()
+
+      parser(data)
+        .then((result) => {
+          setState((prevState) => ({
+            ...prevState,
+            result,
+            parsing: false,
+          }))
+        })
+        .catch((error) => {
+          console.log(error)
+          setState((prevState) => ({
+            ...prevState,
+            parsing: false,
+          }))
+        })
+    }
+  }, [state])
+
+  const updateOptions = () => setOptions((prevOptions) => ({
+    ...prevOptions,
+    uniforms: {
+      u_clim: [
+        parseFloat(climMinRef.current.value) || 0,
+        parseFloat(climMaxRef.current.value) || 1,
+      ],
+      u_renderstyle: parseInt(styleRef.current.value) || 0,
+      u_renderthreshold: parseFloat(thresholdRef.current.value) || 0.15,
+      u_cmdata: textures[textureRef.current.value] || textures.viridis,
+    }
+  }))
+
+  const Model = () => {
+    const {
+      type,
+      result,
+    } = state
+    if(!result)
+      return null 
+
+    switch(type) {
+    case FILE_TYPES.LINES_OF_SPACE_SEPERATED_COORDS:
+      return <Streamlines lines={result}/>
+    case FILE_TYPES.OBJ:
+      return <ObjFile path={result}/>
+    case FILE_TYPES.VTK_VOLUME:
+      return <VolumeRendering vtk={result}>
+        <Volume vtk={result} options={options}/>
+      </VolumeRendering>
+    default:
+      return null
+    }
+  }
+
+  return <Fragment>
+    <FileForm {...{...state, setState}}/>
+    <Model/>
+    <Form style={{flexGrow: 1}} onChange={updateOptions}>
+      <Form.Group>
+        <Form.Label>Clim Min</Form.Label>
+        <Form.Control type='range' min={0} max={1} step={0.1} defaultValue={0} ref={climMinRef}/>
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Clim Max</Form.Label>
+        <Form.Control type='range' min={0} max={1} step={0.1} defaultValue={1} ref={climMaxRef}/>
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Render Style</Form.Label>
+        <Form.Control as='select' defaultValue={0} ref={styleRef}>
+          <option value={0}>MIP</option>
+          <option value={1}>ISO</option>
+        </Form.Control>
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Render Threshold (for ISO)</Form.Label>
+        <Form.Control type='range' min={0} max={1} step={0.01} defaultValue={0.15} ref={thresholdRef}/>
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Texture</Form.Label>
+        <Form.Control as='select' defaultValue={'viridis'} ref={textureRef}>
+          <option value='viridis'>viridis</option>
+          <option value='gray'>gray</option>
+        </Form.Control>
+      </Form.Group>
+    </Form>
+  </Fragment>
+}
+
+export default VolumeRenderView

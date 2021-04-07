@@ -1,0 +1,36 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh,
+}
+
+.sidebar {
+  height: 99%;
+  width: 350px; /* Set the width of the sidebar */
+  z-index: 1; /* Stay on top */
+  background-color: rgb(201, 201, 201); /* Black */
+  overflow-y: auto; /* Disable horizontal scroll */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
+}
+.sidebarLeft{
+  height: 99%;
+  width: 350px; /* Set the width of the sidebar */
+  z-index: 1; /* Stay on top */
+  background-color: rgb(201, 201, 201); /* Black */
+  overflow-y: auto; /* Disable horizontal scroll */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
+}
+.inputLabel{
+  padding-top: 30px;
+  font-size: medium;
+}
+
+.tree-view {
+  overflow: scroll;
+}

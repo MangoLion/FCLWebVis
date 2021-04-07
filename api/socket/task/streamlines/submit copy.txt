@@ -1,0 +1,177 @@
+const { SOCKET_EVENTS } = require('../../helpers/constants/socket')
+const { STORAGE_DATA_TYPES, GET_STORAGE_DATA_TYPE } = require('../../helpers/constants/storage')
+const { executeTask } = require('../../helpers/task')
+const { setData } = require('../../helpers/storage')
+const { readSample,resourcesPath } = require('../../helpers/storage/samples/sample')
+const fs = require('fs')
+/*
+// Client socket task submit simulation
+const fs = require('fs')
+const { STORAGE_DATA_TYPES } = require('../../helpers/constants/storage')
+
+const exampleTaskFactory = (file, fileName) => ({ // msg (task) object
+  name: 'streamline_trace_vtk', // Name of the task being submitted
+  params: { // All parameters used in c++ addon for a task
+    direction: 'both',
+    stepsize: 2,
+    length: 1000,
+    seeding_points: '1.5, 4, 3,2, 3.5, 2.6'
+    
+    // There will be more parameters later ...
+  },
+  data: { // these will aid in parsing/storing data correctly ...
+    id: fileName, // unique id of the data being stored
+    type: STORAGE_DATA_TYPES.VTK_STEADY_VECTORFIELD, // 'VTK_STEADY_VECTORFIELD', 'VTK', etc..
+    contents: file, // Buffer, string, etc
+    // Any other data that will help parsing and storing ...
+  },
+})
+
+let storage = {}
+
+const exampleTaskSubmit = (task) => {
+  if(task.data.contents){
+    
+    setData(storage, task.data)
+  }
+
+  //console.log(storage)
+
+  const data = storage[task.data.id]
+  console.log('RETRIEVING DATA')
+  console.log(data)
+  if(data)
+    executeTask({
+      ...task,
+      data,
+    })
+}
+
+const resourcesPath = '/home/nguyenphan/Downloads'
+const cylinder3D = fs.readFileSync(`${resourcesPath}/cylinder3D.vtk`)
+const bernard3D = fs.readFileSync(`${resourcesPath}/bernard3D.vtk`)
+const tornado3D = fs.readFileSync(`${resourcesPath}/tornado3D.vtk`)
+exampleTaskSubmit(exampleTaskFactory(cylinder3D, 'cylinder3D.vtk'))
+exampleTaskSubmit(exampleTaskFactory(bernard3D, 'bernard3D.vtk'))
+exampleTaskSubmit(exampleTaskFactory(tornado3D, 'tornado3D.vtk'))
+*/
+
+
+module.exports = [
+  (socket, storage) => socket.on(SOCKET_EVENTS.SUBMIT, (task) => {
+    socket.emit('progress', {
+      sending: 100,
+      processing: 0,
+      receiving: 0
+    })
+
+    if(task.data.contents) {
+      task.data.type = GET_STORAGE_DATA_TYPE[task.name]
+      setData(storage, task.data)
+    }
+    console.log('TASK ID ' + task)
+    const data = storage[task.data.id]
+    var result = executeTask({
+      ...task,
+      data,
+    }, socket) //execute the user's task
+    
+    if (result) {
+      var save = {
+        id:task.id,
+        type:task.name,
+        fileContent: result
+      }
+      setData(storage, save)
+    }
+
+  }),
+  (socket, storage) => socket.on(SOCKET_EVENTS.FILE_SUBMIT, (file) => {
+    socket.emit('progress', {
+      sending: 100,
+      processing: 0,
+      receiving: 0
+    })
+    //console.log(STORAGE_DATA_TYPES.VTK_STEADY_VECTORFIELD +', ' + file.type)
+    //console.log((STORAGE_DATA_TYPES.VTK_STEADY_VECTORFIELD == file.type))
+    var useSample = false
+    if (file.contents == '') {
+      useSample = true
+      fs.readFile(`${resourcesPath}/` + file.id, 'utf8', function(err,readContents) {
+        file.contents = readContents
+        var msg = setData(storage, file)
+        var results = {}
+        if (storage[file.id])
+          results = JSON.parse(storage[file.id].json)
+        if (msg) {
+          socket && socket.emit('progress', {
+            sending: 100,
+            processing: 100,
+            receiving: 100,
+            error:msg
+          })
+          return
+        }
+        console.log(msg)
+        if (useSample && file.type != STORAGE_DATA_TYPES.VTK_STEADY_VECTORFIELD)
+          results.fileContent = file.contents
+      
+        socket && socket.emit('progress', {
+          sending: 100,
+          processing: 100,
+          receiving: 0,
+        })
+
+        //client doesnt need vectorfield content
+        //results.point_data = []
+
+        socket && socket.emit('results', results)
+        //socket && socket.emit('results', {})
+
+        socket && socket.emit('progress', {
+          sending: 100,
+          processing: 100,
+          receiving: 100,
+        })
+      })
+      
+    }
+
+    var msg = setData(storage, file)
+    var results = {}
+    if (storage[file.id])
+      results = JSON.parse(storage[file.id].json)
+    if (msg) {
+      socket && socket.emit('progress', {
+        sending: 100,
+        processing: 100,
+        receiving: 100,
+        error:msg
+      })
+      return
+    }
+    console.log(msg)
+    if (useSample && file.type != STORAGE_DATA_TYPES.VTK_STEADY_VECTORFIELD)
+      results.fileContent = file.contents
+  
+    socket && socket.emit('progress', {
+      sending: 100,
+      processing: 100,
+      receiving: 0,
+    })
+
+    //client doesnt need vectorfield content
+    //results.point_data = []
+
+    socket && socket.emit('results', results)
+    //socket && socket.emit('results', {})
+
+    socket && socket.emit('progress', {
+      sending: 100,
+      processing: 100,
+      receiving: 100,
+    })
+
+
+  })
+]
