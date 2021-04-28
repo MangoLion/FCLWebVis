@@ -14,6 +14,7 @@ import set_progress from './../../redux/actions/SetProgress'
 import load_workspace from './../../redux/actions/loadWorkspace'
 import {samples, getSampleType} from './../../utilities/sample'
 import { toast } from 'react-toastify'
+import { getWorkspaces } from 'utilities/userdata'
 /**
  * Opens a dialogue that allow the user to choose a new file to add to the top layer of the tree view (TreeWindow)
  * @todo fix the setOpen redundancy
@@ -81,6 +82,25 @@ let NewFileDialogue = ({dispatch, addToggle, setOpen, open, onNewFile, allFileNa
       type
     })
     handleClose()
+  }
+
+  const onListItemClick2 = (e) => {
+    let value = e.target.innerText
+    toast(value)
+    getIoInstance().emit('load user workspace', {
+      workspace_name: value
+    })
+    toast('Loading workspace, please wait')
+    //dispatch(load_workspace())
+    handleClose()
+  }
+
+  function UserDataList() {
+    const list = []
+    getWorkspaces().forEach(ws=>{
+      if (ws!= "null") list.push(<li key={ws} onClick={onListItemClick2}>{ws}</li>)
+    })
+    return   <ul >{list}</ul>  
   }
 
   function BasicList() {
@@ -154,7 +174,8 @@ let NewFileDialogue = ({dispatch, addToggle, setOpen, open, onNewFile, allFileNa
           
     fr.readAsText(e.target.files[0]) 
   }
-  let fileNames = BasicList()
+  let fileNames = BasicList(),
+    workspaceNames = UserDataList()
   /**
    * get the list of all file types from fileTypes.js
    */
@@ -193,6 +214,8 @@ let NewFileDialogue = ({dispatch, addToggle, setOpen, open, onNewFile, allFileNa
         </div>
         <h5>Server Files:</h5>
         {<BasicList values={fileNames}/>}
+        <h5>YOUR Files:</h5>
+        {<UserDataList values={workspaceNames}/>}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>

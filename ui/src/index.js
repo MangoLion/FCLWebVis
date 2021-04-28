@@ -22,16 +22,46 @@ import initializeStore from './redux/middleware/InitStore'
 import {setSamples} from './utilities/sample'
 import { toast } from 'react-toastify'
 import ErrorBoundary from 'components/model/core/ErrorBoundary'
+import {setWorkspaces} from './utilities/userdata'
+
+const BJSON = require('buffer-json')
 //connect to socketIO server
 initSocketIO()
 
 //Main redux store that holds the entire client's state, storing all data
-const store = initializeStore()
+const store = initializeStore();
 
-getIoInstance().on('samples', function(samples) {
+let search = window.location.search;
+let params = new URLSearchParams(search);
+let username = params.get('user');
+if (!username){
+  alert("Error: login is missing. Please login from the main page!");
+  window.location.href = 'http://localhost:5000/';
+}
+
+window.history.replaceState({}, document.title, "/");
+
+getIoInstance().emit('login', username);
+
+getIoInstance().on('samples', function(data) {
   toast.success('Server Connection Established',{autoClose: 2000})
-  setSamples(samples.samples)
+  setSamples(data.samples)
+  setWorkspaces(data.workspaces)
   store.dispatch(call_render())
+})
+
+getIoInstance().on('load user workspace', function(workspace) {
+  store.dispatch(set_progress({
+    sending: 0,
+    processing: 0,
+    receiving: 0
+  }))
+  let state = BJSON.parse(workspace)
+  state.dontSnapshot = true;
+  store.dispatch(load_workspace(state))
+  store.dispatch(set_file({
+    name:state.file_current_name
+  }))
 })
 
 getIoInstance().on('load workspace', function(workspace) {

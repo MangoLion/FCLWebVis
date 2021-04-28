@@ -80,7 +80,7 @@ class SubmitComponent extends React.Component {
     
     if (this.props.task.onSubmit) {
       //alert('yes')
-      this.props.task.onSubmit(this.props.dispatch, this.props.task)
+      //this.props.task.onSubmit(this.props.dispatch, this.props.task)
     }
 
     let obj_message = {

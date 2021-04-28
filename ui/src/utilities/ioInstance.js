@@ -8,7 +8,9 @@ let instance = null
 export function initSocketIO() {
   var hostname = window.location.hostname
   //instance = openSocket('http://localhost:8070')
-  instance = openSocket('http://'+hostname+':8070')
+  instance = openSocket('http://'+hostname+':8070', {
+    //withCredentials: true
+  })
 }
 
 export function getIoInstance() {

@@ -243,8 +243,11 @@ const task_app = (
       recursiveParentAdd(action.state)
       file_set (action.state, action.state.file_current_name)
     }else action.state= state
-    action.state.snapshotMode = true
-    document.getElementById('snapshot').style.display = 'block'
+
+    if (!action.state.dontSnapshot){
+      action.state.snapshotMode = true
+      document.getElementById('snapshot').style.display = 'block'
+    }
     //console.log('LOADING WS')
     //console.log(action.state)
     return action.state

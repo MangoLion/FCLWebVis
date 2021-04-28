@@ -28,6 +28,7 @@ const TASK_FUNCS = {
     //parse_seeding_points(params)
     params.seeding_points = params.seeding_points.replace(/["'()]/g,'').split(',').map(Number)
     //console.log(params.seeding_points)
+    //console.log(data)
     var result = streamlines.generateStreamlines(JSON.stringify(params),data)
     result = JSON.parse(result)
     //convert each streamline.points from 1d to 2d array

@@ -13,9 +13,13 @@ import set_file from '../../redux/actions/SetFile'
 import file_set from '../../redux/actions/SetFile'
 import WaitDialog from './WaitDialog'
 import InfoIcon from '@material-ui/icons/Info'
+
 import { Link } from 'react-router-dom'
 import { getFileType } from 'utilities/fileTypes'
 import { getTaskType } from 'utilities/taskTypes'
+
+import {getIoInstance} from './../../utilities/ioInstance'
+import { ContactSupportOutlined } from '@material-ui/icons'
 /*const useStyles = makeStyles({
   avatar: {
     backgroundColor: blue[100],
@@ -141,9 +145,30 @@ function SimpleDialog({ setFile, loadWS, onClose, selectedValue, open, state }) 
     recursiveParentAdd(new_state)
   }
 
+  const saveToServer = () =>{
+    setShowWait(true)
+    
+
+    //terribly optimized WS save code
+    var new_state = {...state}
+    new_state.file_current = null
+    recursiveParentRemove(new_state)
+    let name = prompt("Please enter new workspace name", "Workspace1");
+    new_state.workspace_name = name;
+    getIoInstance().emit('save user workspace', new_state, ()=>{
+      setShowWait(false)
+    })
+    recursiveParentAdd(new_state)
+    
+    /*setState((state) => ({
+      ...state,
+      show: true
+    }))*/
+  }
+
   function onFileChangeJSON(e) {
     //let fileName = e.target.files[0].name
-    setShowWaitLoad(true)
+    setShowWait(true)
     let file=e.target.files[0]
     
     window.setTimeout(() => {
@@ -165,21 +190,23 @@ function SimpleDialog({ setFile, loadWS, onClose, selectedValue, open, state }) 
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
       <DialogTitle id="simple-dialog-title">Save/Load Options</DialogTitle>
       <List>
-
+        <ListItem autoFocus button onClick={saveToServer}>
+          <ListItemText primary="Save workspace to server" />
+        </ListItem>
         <ListItem autoFocus button onClick={saveJSON}>
-          <ListItemText primary="Save workspace" />
+          <ListItemText primary="Download workspace" />
         </ListItem>
         <ListItem autoFocus button onClick={saveFileJSON}>
-          <ListItemText primary="Save currently selected as workspace" />
+          <ListItemText primary="Download currently selected as workspace" />
         </ListItem>
         <ListItem autoFocus button onClick={saveFileNATIVE}>
-          <ListItemText primary="Save currently selected in native format" />
+          <ListItemText primary="Download currently selected in native format" />
         </ListItem>
         {/*<ListItem autoFocus button onClick={saveJS}>
           <ListItemText primary="Save JS" />
           </ListItem>*/}
         <ListItem autoFocus button >
-          <ListItemText primary="Load JSON" />
+          <ListItemText primary="upload JSON workspace" />
           <input type="file" name="file"   onChange={onFileChangeJSON}/>
         </ListItem>
       </List>

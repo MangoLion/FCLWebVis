@@ -58,7 +58,9 @@ exampleTaskSubmit(exampleTaskFactory(tornado3D, 'tornado3D.vtk'))
 
 
 module.exports = [
-  (socket, storage) => socket.on(SOCKET_EVENTS.SUBMIT, (task) => {
+  (socket, getStorage) => socket.on(SOCKET_EVENTS.SUBMIT, (task) => {
+    //console.log(task)
+
     socket.emit('progress', {
       sending: 100,
       processing: 0,
@@ -67,10 +69,15 @@ module.exports = [
 
     if(task.data.contents) {
       task.data.type = GET_STORAGE_DATA_TYPE[task.name]
-      setData(storage, task.data)
+      setData(getStorage(), task.data)
     }
-    console.log('TASK ID ' + task)
-    const data = storage[task.data.id]
+    /*console.log('TASK ID ')
+    console.log(task.data.id)
+    console.log('-------')*/
+    const data = getStorage()[task.data.id]
+    //console.log(data)
+    //console.log('---')
+    //console.log(getStorage())
     var result = executeTask({
       ...task,
       data,
@@ -82,11 +89,11 @@ module.exports = [
         type:task.name,
         fileContent: result
       }
-      setData(storage, save)
+      setData(getStorage(), save)
     }
 
   }),
-  (socket, storage) => socket.on(SOCKET_EVENTS.FILE_SUBMIT, (file) => {
+  (socket, getStorage) => socket.on(SOCKET_EVENTS.FILE_SUBMIT, (file) => {
     socket.emit('progress', {
       sending: 100,
       processing: 0,
@@ -99,10 +106,10 @@ module.exports = [
       useSample = true
       fs.readFile(`${resourcesPath}/` + file.id, 'utf8', function(err,readContents) {
         file.contents = readContents
-        var msg = setData(storage, file)
+        var msg = setData(getStorage(), file)
         var results = {}
-        if (storage[file.id])
-          results = JSON.parse(storage[file.id].json)
+        if (getStorage()[file.id])
+          results = JSON.parse(getStorage()[file.id].json)
         if (msg) {
           socket && socket.emit('progress', {
             sending: 100,
@@ -112,7 +119,7 @@ module.exports = [
           })
           return
         }
-        console.log(msg)
+        //console.log(msg)
         if (useSample && file.type != STORAGE_DATA_TYPES.VTK_STEADY_VECTORFIELD)
           results.fileContent = file.contents
       
@@ -137,12 +144,12 @@ module.exports = [
       
     }
     new Promise((resolve, reject) => {
-      var msg = setData(storage, file)
+      var msg = setData(getStorage(), file)
       resolve(msg)
     }).then((msg) => {
       var results = {}
-      if (storage[file.id])
-        results = JSON.parse(storage[file.id].json)
+      if (getStorage()[file.id])
+        results = JSON.parse(getStorage()[file.id].json)
       if (msg) {
         socket && socket.emit('progress', {
           sending: 100,
@@ -152,7 +159,7 @@ module.exports = [
         })
         return
       }
-      console.log(msg)
+      //console.log(msg)
       if (useSample && file.type != STORAGE_DATA_TYPES.VTK_STEADY_VECTORFIELD)
         results.fileContent = file.contents
   
