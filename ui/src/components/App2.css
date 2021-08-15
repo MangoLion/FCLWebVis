@@ -8,29 +8,52 @@
   height: 100vh,
 }
 
+#vis {
+  height: 35%;
+  flex-grow: 0.5;
+  /*display: none;*/
+}
+
 .sidebar {
-  height: 99%;
-  width: 350px; /* Set the width of the sidebar */
-  z-index: 1; /* Stay on top */
-  background-color: rgb(201, 201, 201); /* Black */
-  overflow-y: auto; /* Disable horizontal scroll */
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 20px;
+  /*height: 99%;*/
+  /* Set the width of the sidebar */
+  z-index: 1;
+  /* Stay on top */
+  background-color: 'white';
+  /*rgb(201, 201, 201);*/
+  /* Black */
+  overflow-y: hidden;
+  /* Disable horizontal scroll */
+  overflow-x: hidden;
+  /* Disable horizontal scroll */
 }
-.sidebarLeft{
-  height: 99%;
-  width: 350px; /* Set the width of the sidebar */
-  z-index: 1; /* Stay on top */
-  background-color: rgb(201, 201, 201); /* Black */
-  overflow-y: auto; /* Disable horizontal scroll */
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 20px;
+
+.sidebarLeft {
+  /*height: 99%;*/
+  width: 100%;
+  /*350px;*/
+  /* Set the width of the sidebar */
+  z-index: 1;
+  /* Stay on top */
+  background-color: 'white';
+  /*rgb(201, 201, 201);*/
+  /* Black */
+  overflow-y: auto;
+  /* Disable horizontal scroll */
+  overflow-x: hidden;
+  /* Disable horizontal scroll */
 }
-.inputLabel{
+
+.inputLabel {
   padding-top: 30px;
   font-size: medium;
 }
 
 .tree-view {
   overflow: scroll;
+  max-height: 150px;
+}
+
+.MuiCardContent-root {
+  padding: 0% !important;
 }

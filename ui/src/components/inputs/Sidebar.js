@@ -11,6 +11,11 @@ import Button from '@material-ui/core/Button'
 
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
+
+import Accordion from '@material-ui/core/Accordion'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+
 let Sidebar = ({dispatch, viewType, openItems}) => {
   //alert(openItems.toString())
   const handleChange = (event, newAlignment) => {
@@ -30,7 +35,14 @@ let Sidebar = ({dispatch, viewType, openItems}) => {
       </ToggleButton>
     </ToggleButtonGroup>
     <TreeWindow key={openItems.toString()} openItems={openItems}/>
-    <FileInput/>
+
+    {/*<Accordion defaultExpanded={true}>
+        <AccordionSummary>Render</AccordionSummary>
+          <AccordionDetails style={{display: 'inline',padding: 0}}>*/}
+          <FileInput/>
+    {/*</AccordionDetails>  
+      </Accordion>*/}
+    
   </div>
 }
 

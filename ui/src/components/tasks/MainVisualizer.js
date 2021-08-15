@@ -10,6 +10,23 @@ import shortid from 'shortid'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { getFileType } from 'utilities/fileTypes'
 
+
+const RenderContainer = (props) => {
+  const [list,setList] = useState([{layout:"horizontal", type:"ThreeJS"},{layout:"horizontal", type:"ThreeJS"}])
+
+  let addHandler = type =>{
+
+  }
+
+  let components = list.map(view => 
+    <MainVisualizer style={{flexGrow:0}} addHandler={addHandler} layout={view.layout} type={view.type} {...props}/>
+  )
+  return <div id="TEST" style={{maxHeight:'100vh', height:'100vh'}}>
+    {components}
+  </div>
+}
+
+
 let isOrtho=false
 /**
  * This core component will get the list of files with doRender = true and create a Visualizer component for each of the file.
@@ -87,7 +104,8 @@ let MainVisualizer = ({dispatch, files, render_count, task, center, data_range,e
       concurrent
       gl2
       style={{
-        flexGrow: 0.5,
+        height:'99%'
+        //flexGrow: 0.5,
         //width:'49%',
         //float:'left'
       }}>
@@ -108,7 +126,7 @@ let MainVisualizer = ({dispatch, files, render_count, task, center, data_range,e
         target:center
       }}
       style={{
-        flexGrow: 0.5
+        height:'99%'
         //width:'49%',
         //float:'left'
         
@@ -215,10 +233,10 @@ const mapStateToProps = (newState) => {
   return{files,
     render_count:newState.render_count, task,center:newState.center,data_range:data_range}
 } 
-
 MainVisualizer = connect(mapStateToProps)(MainVisualizer)
 
 export {
   MainVisualizer,
+  RenderContainer,
   isOrtho
 } 

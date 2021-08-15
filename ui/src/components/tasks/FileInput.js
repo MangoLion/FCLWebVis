@@ -5,6 +5,7 @@ import {StreamlinesInputs} from './streamlines/StreamLinesView'
 import {VolumeRenderInputs} from './streamlines/VolumeRenderView'
 import {SurfaceObjInputs} from './streamlines/SurfaceTraceTask'
 import {SegmentMapInputs} from './streamlines/FindNeighborTask'
+import {VegaVisInputs} from './streamlines/VEGATask'
 import { connect } from 'react-redux'
 import {Modal, Button} from 'react-bootstrap'
 import call_render from 'redux/actions/RenderCall'
@@ -25,7 +26,8 @@ const useStyles = makeStyles({
     transform: 'scale(0.8)',
   },
   title: {
-    fontSize: 14,
+    //fontSize: 14,
+    fontSize: 18,
   },
   pos: {
     marginBottom: 12,
@@ -53,7 +55,8 @@ let FileInput = ({file, render_count, updateRender}) => {
     streamlines_array: StreamlinesInputs,
     surface_obj: SurfaceObjInputs,
     volume_render:VolumeRenderInputs,
-    segment_map:SegmentMapInputs
+    segment_map:SegmentMapInputs,
+    vegavis:VegaVisInputs
   }
 
   function humanize(str) {
@@ -87,21 +90,21 @@ let FileInput = ({file, render_count, updateRender}) => {
     <Button variant="contained" onClick={updateRender}>Render</Button>
     </div>*/}
   
-  return <div style={{paddingTop:'25px'}}>
+  return <div style={{paddingTop:'25px', borderBottom:'dashed', borderTop:'dashed'}}>
     <Card className={classes.root}>
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
-          DataSet/Render Options
+          Render Properties
         </Typography>
-        <Typography variant="h5" component="h2">
+        {/*<Typography variant="h5" component="h2">
           {file.id}
-        </Typography>
+        </Typography>*/}
         <Typography className={classes.pos} color="textSecondary">
           {'type: '+type}
         </Typography>
-        <Typography variant="body2" component="p">
+        {/*<Typography variant="body2" component="p">
           {displayVars}
-        </Typography>
+      </Typography>*/}
         <Component isFileInput={true} file={file} />
         
       </CardContent>

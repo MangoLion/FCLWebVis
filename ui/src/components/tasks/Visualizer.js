@@ -7,6 +7,7 @@ import Volume from './VolRender/models/volume/Volume'
 import BoundingBox from 'components/model/core/BoundingBox'
 import { SurfaceTraceView } from './streamlines/SurfaceTraceTask'
 import { FindNeighborView ,SegmentMapView} from './streamlines/FindNeighborTask'
+import { VegaLiteView ,VegaVisView} from './streamlines/VEGATask'
 
 /**
  * This is a core component that will find the corresponding display component of the current file to be rendered based on fileType. Or null if the fileType doesnt have any input components, or the current file does not have any display component
@@ -29,7 +30,9 @@ let Visualizer = ({dispatch, file, task, render_count}) => {
     surface_obj: SurfaceView,
     volume_render:Volume,
     neighbor_find:FindNeighborView,
-    segment_map:SegmentMapView
+    segment_map:SegmentMapView,
+    vegalite:VegaLiteView,
+    vegavis: VegaVisView
   }
   let BBox=null
   if (file && file.fileFields.data_range && file.fileFields.origin) {

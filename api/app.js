@@ -1,3 +1,10 @@
+/**
+ * - Starts socket/helpers/socket.js
+ * - Starts a SocketIO client to connect to the Load balancer's SocketIO server to register the IP address 
+ *    and port of the processing server
+ */
+
+//disable https for now
 const http = require('http')
 //const https = require('https')
 const app = require('express')()
@@ -12,13 +19,13 @@ routes.map((route) => app.use('/', route))
 
 const fs = require('fs')
 
-//console.log(fs.readFileSync('server.key', 'utf8'))
-// Create server
+// Create server with SSL certificates
 /*const server = https.createServer({
   key: fs.readFileSync('server.key', 'utf8'),
   cert: fs.readFileSync('server.cert', 'utf8')
 }, app)*/
 const server = http.createServer(app)
+
 // Use socket with server
 const io = require('socket.io')(server,{
   pingTimeout:150000,
@@ -32,7 +39,7 @@ const io = require('socket.io')(server,{
     res.end()
   }*/
 })
-//io.origins('*:*') 
+//enable cross-domain (legacy!)
 io.set('origins', '*:*')
 
 //connect with load balancer

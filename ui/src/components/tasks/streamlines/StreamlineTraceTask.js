@@ -8,6 +8,7 @@ import {registerTaskType} from '../../../utilities/taskTypes'
 import {registerFileType} from '../../../utilities/fileTypes'
 import { Button} from 'react-bootstrap'
 import set_field from '../../../redux/actions/SetField'
+import ListBox from '../../inputs/ListBoxComponents/ListBox'
 /*
 function parse_seeding_points(file) {
   var seeding_points = []
@@ -94,12 +95,12 @@ function parse_seeding_points(file) {
 
 
 const init = () => {
-  var seeding_pts = ''
+  /*var seeding_pts = ''
   for (var i = 0; i < 100*3; i ++) {
     seeding_pts+= Math.random()
     if (i != 100*3-1)
       seeding_pts +=  ', '
-  }
+  }*/
 
   registerTaskType({
     name: 'streamline_trace_vtk',
@@ -322,6 +323,7 @@ let StreamlinesTraceInputs = ({dispatch, seeding_type,file}) => {
     <DropdownComponent name="show_seeding_curve"  values={['hide', 'points', 'tube', 'line']} isFileInput={false}/>
     <DropdownComponent name="seeding_type"  values={['points', 'start end', 'random', 'uniform']} isFileInput={false}/>
     {seedingComponent}
+    <ListBox/>
   </div>
 }
 const mapStateToProps = (newState) => {

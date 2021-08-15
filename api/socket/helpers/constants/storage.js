@@ -1,3 +1,4 @@
+//dataset type constants
 const STORAGE_DATA_TYPES = {
   VTK_STEADY_VECTORFIELD: 'vectorfield_vtk',
 }

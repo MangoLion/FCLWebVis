@@ -1,0 +1,130 @@
+/*@font-face {
+  font-family: Lato;
+  font-size: 0px;
+  src: url("https://fonts.googleapis.com/css?family=Lato:300,400,900,900i");
+}*/
+
+
+.wrapperList {
+  max-width: 306px;
+  margin: auto;
+  background: #fff;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  /*padding: 50px;*/
+}
+
+.todoInputList {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 35px;
+}
+
+.inputList {
+  width: 31%;
+  margin-right: 5px;
+  padding: 15px 0 15px 15px;
+  border-radius: 4px;
+  border: 1px solid rgb(238, 238, 238);
+}
+
+.buttonList {
+  background: #62c7ff;
+  border: none;
+  width: 100%;
+  /*display: flex;*/
+  font-size: 1rem;
+  font-weight: 300;
+  font-family: "Lato", sans-serif;
+  padding: 15px 15px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.buttonsubmitList {
+  background: #62c7ff;
+  border: none;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 300;
+  font-family: "Lato", sans-serif;
+  padding: 15px 15px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.buttonlistitem {
+  background: #d1d1d1;
+  border-bottom: 5px;
+  font-size: 0.8rem;
+  font-weight: 300;
+  font-family: "Lato", sans-serif;
+  padding: 7px 15px;
+  border-radius: 4px;
+  color: black;
+  max-width: 75%;
+}
+
+.buttondelete {
+  background: #00a6ff;
+  border-bottom: 5px;
+  font-size: 0.8rem;
+  font-weight: 300;
+  font-family: "Lato", sans-serif;
+  padding: 7px 15px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+button:hover {
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
+}
+
+button:active {
+  color: rgb(255, 255, 255);
+  background-color: #00a6ff;
+  transform: translateY(1px);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+}
+
+.ulList {
+  list-style: none;
+  height: 250px;
+  margin-bottom: 50px;
+}
+
+.liList {
+  font-weight: 300;
+  padding: 5px 0 5px 0;
+  border-top: 1px solid #eee;
+  display: block;
+  justify-content: space-between;
+}
+
+.mainlist {
+  flex: 1;
+  overflow-y: scroll;
+  max-height: 250px;
+}
+
+.logo-container {
+  margin-bottom: 25px;
+}
+
+img {
+  height: 25px;
+}
+
+button.action {
+  color: #333;
+  background: none;
+  padding: 0;
+}
+
+button.action:focus {
+  outline: none;
+}

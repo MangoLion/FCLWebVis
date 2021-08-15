@@ -5,6 +5,7 @@ import React from 'react'
 import {StreamlinesTraceInputs} from './streamlines/StreamlineTraceTask'
 import {SurfaceTraceInputs} from './streamlines/SurfaceTraceTask'
 import {FindNeighborInputs} from './streamlines/FindNeighborTask'
+import {VegaLiteInputs} from './streamlines/VEGATask'
 import { connect } from 'react-redux'
 
 import Card from '@material-ui/core/Card'
@@ -22,7 +23,7 @@ const useStyles = makeStyles({
     transform: 'scale(0.8)',
   },
   title: {
-    fontSize: 14,
+    fontSize: 18,
   },
   pos: {
     marginBottom: 12,
@@ -46,7 +47,8 @@ let TaskInput = ({file}) => {
     streamline_negate: () => null,
     surface_trace: SurfaceTraceInputs,
     volume_render_vtk: () => null,
-    neighbor_find: FindNeighborInputs
+    neighbor_find: FindNeighborInputs,
+    vegalite: VegaLiteInputs
   }
 
   let Component = components[type]
@@ -80,15 +82,15 @@ let TaskInput = ({file}) => {
         <Typography className={classes.title} color="textSecondary" gutterBottom>
           Task Parameters
         </Typography>
-        <Typography variant="h5" component="h2">
+        {/*<Typography variant="h5" component="h2">
           {file.id}
-        </Typography>
+            </Typography>*/}
         <Typography className={classes.pos} color="textSecondary">
           {'task type: '+type}
         </Typography>
-        <Typography variant="body2" component="p">
+        {/*<Typography variant="body2" component="p">
           {displayVars}
-        </Typography>
+          </Typography>*/}
         <Component isFileInput={true} file={file} />
       </CardContent>
     </Card>

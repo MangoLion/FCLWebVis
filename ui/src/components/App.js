@@ -1,5 +1,6 @@
 import React from 'react'
 import './App.css'
+
 import {
   Switch,
   Route,
@@ -36,6 +37,7 @@ const App = () => {
     }}>
       <MainNavbar/>
   </div>*/}
+    
     <div id='snapshot' style={{position:'fixed', width:'100%',display:'none',backgroundColor:'#8b0000', height:'30px', color:'white', bottom:0}}>Snapshot Mode</div>
     <div style={{
       display: 'flex',

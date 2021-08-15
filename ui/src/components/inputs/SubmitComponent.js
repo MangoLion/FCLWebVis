@@ -72,6 +72,14 @@ class SubmitComponent extends React.Component {
   onSubmit() {
     if (!this.props.task_name)
       return
+
+    ///
+    if (this.props.task.onSubmit) {
+      //alert('yes')
+      this.props.task.onSubmit(this.props.dispatch, this.props.task)
+    }
+    ///
+
     //console.log(this.props.task)
     if (!getTaskType(this.props.task_name).sendToServer || !this.props.task_params_changed) {
       this.props.dispatch(call_render())
