@@ -10,4 +10,4 @@ For a brief description of important folders, scripts, and components, see the f
 Preview:
 ![overview.png](overview.png)
 
-For more detailed descriptions see [Project_Structire_Overview.pdf](Project_Structire_Overview.pdf)
+For more detailed descriptions see [Project_Structure_Overview.pdf](Project_Structure_Overview.pdf)
